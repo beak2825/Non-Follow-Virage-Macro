@@ -1,5 +1,6 @@
 # Virage Grow A Garden Macro
 A macro for the Roblox game "Grow a Garden"
+
 This fork changed it so you don't have to follow Virage on startup, it automatically opens!
  ## Installation
  - First of all, you need to download [AutoHotKey v1.1](https://www.autohotkey.com/) (Not 2.0), and run the installer
