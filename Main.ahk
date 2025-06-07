@@ -535,7 +535,7 @@ FollowUser:
 return
 
 VerifyUser:
-    if (triedVerify = 0) {
+    if (triedVerify = 5) {
                MsgBox, 0x41030, Verification Error, Please make sure you follow Virage on Roblox, or wait around 10 seconds for the system to verify and try again.
         triedVerify := 1
     } else {
