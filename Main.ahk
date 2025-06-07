@@ -524,7 +524,7 @@ Return
 Continue:
     Gui, 99: Destroy
     triedVerify := 0
-    Gosub, ShowVerify
+    Gosub
 return
 
 
