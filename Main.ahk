@@ -174,17 +174,17 @@ DonateResponder(ctrlName) {
 
 
     if (ctrlName = "Donate100")
-        Run, https://www.roblox.com/game-pass/1197306369/100-Donation
+        Run, https://www.roblox.com/catalog/125653268806275/100-Donation
     else if (ctrlName = "Donate500")
-        Run, https://www.roblox.com/game-pass/1222540123/500-Donation
+        Run, https://www.roblox.com/catalog/125653268806275/100-Donation
     else if (ctrlName = "Donate1000")
-        Run, https://www.roblox.com/game-pass/1222262383/1000-Donation
+        Run, https://www.roblox.com/catalog/125653268806275/100-Donation
     else if (ctrlName = "Donate2500")
-        Run, https://www.roblox.com/game-pass/1222306189/2500-Donation
+        Run, https://www.roblox.com/catalog/125653268806275/100-Donation
     else if (ctrlName = "Donate10000")
-        Run, https://www.roblox.com/game-pass/1220930414/10-000-Donation
+        Run, https://www.roblox.com/catalog/125653268806275/100-Donation
     else if (ctrlName = "Donate50000")
-        Run, https://www.roblox.com/game-pass/1234519691/50-000-Donation
+        Run, https://www.roblox.com/catalog/125653268806275/100-Donation
     else
         return
 
