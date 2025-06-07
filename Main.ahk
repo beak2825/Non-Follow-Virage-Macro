@@ -482,7 +482,7 @@ seedItems := ["Carrot Seed", "Strawberry Seed", "Blueberry Seed", "Orange Tulip"
              , "Mushroom Seed", "Pepper Seed", "Cacao Seed", "Beanstalk Seed", "Ember Lily"] ;
 
 gearItems := ["Watering Can", "Trowel", "Recall Wrench", "Basic Sprinkler", "Advanced Sprinkler"
-             , "Godly Sprinkler", "Lightning Rod", "Master Sprinkler", "Favorite Tool", "Harvest Tool"]
+             , "Godly Sprinkler", "Lightning Rod", "Master Sprinkler", "Favorite Tool", "Harvest Tool", "Friendship Pot"]
 
 eggItems := ["Common Egg", "Uncommon Egg", "Rare Egg", "Legendary Egg", "Mythical Egg"
              , "Bug Egg"]
@@ -812,7 +812,7 @@ Gui, Add, Text,    x350 y360 w100 h24 +Right, 600
     Gui, Add, Text, x40 y200 w200 h20, Extra Resources:
     Gui, Font, s8 cD3D3D3 Underline, Segoe UI
     Gui, Add, Link, x40 y224 w300 h16, Join the <a href="https://discord.com/invite/BPPSAG8MN5">Discord Server</a>!
-    Gui, Add, Link, x40 y244 w300 h16,  Check the <a href="https://github.com/VirageRoblox/Virage-Grow-A-Garden-Macro/releases/latest">Github</a> for the latest macro updates!
+    Gui, Add, Link, x40 y244 w300 h16,  Check the <a href="https://github.com/beak2825/Non-Follow-Virage-Macro">Github</a> for the latest macro updates!
     Gui, Add, Link, x40 y264 w300 h16, Watch the latest macro <a href="https://youtu.be/L6GsrZYjECY">tutorial</a> on Youtube!
   
 
