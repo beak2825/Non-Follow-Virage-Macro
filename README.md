@@ -1,5 +1,16 @@
+
+
 # Virage Grow A Garden Macro
 A macro for the Roblox game "Grow a Garden"
+
+
+# How to use the Honey Shop
+- Make sure you face the sell shop guy like in the image shown, then face directly down.
+- You also want to have atleast one seed selected in the seed shop to align yourself.
+![Image 1](https://github.com/beak2825/Non-Follow-Virage-Macro/blob/main/Images/tut1.png?raw=true)
+- Then face directly down.
+![Image 2](https://github.com/beak2825/Non-Follow-Virage-Macro/blob/main/Images/tut2.png?raw=true)
+
 
 This fork changed it so you don't have to follow Virage on startup, it automatically opens!
  ## Installation
