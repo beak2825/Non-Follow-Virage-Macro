@@ -8,9 +8,14 @@ SetMouseDelay, -1
 SetWinDelay, -1
 SetControlDelay, -1
 SetBatchLines, -1   
+SetWorkingDir %A_ScriptDir%
 
 ; globals
 
+global version := "1.0.0"
+global versionURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Images/ver.txt"
+global updateURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Main.ahk"
+global mainFile := A_ScriptFullPath
 global webhookURL
 global discordUserID
 global PingSelected
@@ -28,6 +33,7 @@ global msgBoxCooldown := 0
 global seedAutoActive := 0
 global gearAutoActive := 0
 global eggAutoActive  := 0
+global honeyAutoActive := 0
 global safeCheckAutoActive := 0
 
 global triedVerify := 0 
@@ -54,6 +60,52 @@ gearScroll_1440p_125 := [1, 3, 4, 6, 8, 9, 12, 12]
 global privateServerURL := ""        ; link you type in the INI file
 global lastReconnectAttempt := 0     ; A_TickCount of last click
 global reconnectCooldown   := 5     ; seconds between tries
+
+
+
+
+
+
+; ============================
+; Version Check and Updater
+; ============================
+CheckForUpdate() {
+    global version, versionURL, updateURL, mainFile
+
+    UrlDownloadToFile, %versionURL%, %A_Temp%\ver.txt
+    if (!FileExist(A_Temp "\ver.txt")) {
+        MsgBox, 16, Error, Failed to check version from server.
+        return
+    }
+
+    FileRead, remoteVersion, %A_Temp%\ver.txt
+    remoteVersion := Trim(remoteVersion)
+
+    if (remoteVersion != version) {
+        MsgBox, 64, Update Found, New version %remoteVersion% available.`nUpdating now...
+
+        UrlDownloadToFile, %updateURL%, %A_Temp%\Main_Update.ahk
+        if (!FileExist(A_Temp "\Main_Update.ahk")) {
+            MsgBox, 16, Error, Failed to download updated script.
+            return
+        }
+
+        FileDelete, %mainFile%
+        FileMove, %A_Temp%\Main_Update.ahk, %mainFile%
+        MsgBox, 64, Update Complete, Script updated to version %remoteVersion%.`nRestarting...
+        Run, %mainFile%
+        ExitApp
+    }
+}
+
+CheckForUpdate()
+
+
+
+
+
+
+
 
 IniRead, privateServerURL, %settingsFile%, Main, PrivateServerURL,
 if (privateServerURL = "ERROR")
@@ -489,7 +541,12 @@ eggItems := ["Common Egg", "Uncommon Egg", "Rare Egg", "Legendary Egg", "Mythica
 
 cosmeticItems := ["Cosmetic 1", "Cosmetic 2", "Cosmetic 3", "Cosmetic 4", "Cosmetic 5"
              , "Cosmetic 6",  "Cosmetic 7", "Cosmetic 8", "Cosmetic 9"]
-
+honeyItems := ["Flower Seed Pack", "Lavender Seed", "Nectarshade Seed", "Nectarine Seed", "Hive Fruit Seed", "Pollen Radar", "Nectar Staff", "Honey Sprinkler", "Bee Egg"
+             , "Bee Crate",  "Honey Comb", "Bee Chair", "Honey Torch", "Honey Walkway"]
+			 
+			 
+			 
+			 
 settingsFile := A_ScriptDir "\settings.ini"
 
 started := 0
@@ -520,6 +577,19 @@ ShowVerify:
     Gui, 2: Add, Button, x210 y60 w120 h30 gVerifyUser, Verify
     Gui, 2: Show,  w400 h110 Center, Virage Verification
 Return
+
+ShowVersion:
+    Gui, 2: +AlwaysOnTop -Resize +ToolWindow
+    Gui, 2: Margin, 10, 10
+    Gui, 2: Font, s10 cBlack Bold, Segoe UI
+    Gui, 2: Add, Text, x10 y10 w380 h40 Center, There is a new update, update or no?.
+    Gui, 2: Font, s9 cWhite, Segoe UI
+    Gui, 2: Add, Button, x50 y60 w120 h30 gSkipUpdate, Skip Update
+    Gui, 2: Add, Button, x210 y60 w120 h30 gUpdate, Update
+    Gui, 2: Show,  w400 h110 Center, Virage Verification
+Return
+
+
 
 Continue:
     Gui, 99: Destroy
@@ -595,7 +665,7 @@ ShowGui:
     Gui, Margin, 10, 10
     Gui, Color, 0x202020
     Gui, Font, s9 cWhite, Segoe UI
-Gui, Add, Tab, x10 y10 w500 h400 vMyTab -Wrap, Seeds|Gears|Eggs|Cosmetics|Settings|Donate|Credits
+Gui, Add, Tab, x10 y10 w500 h400 vMyTab -Wrap, Seeds|Gears|Eggs|Cosmetics|Honey|Settings|Donate|Credits
 
 
     Gui, Tab, 1
@@ -665,6 +735,17 @@ Gui, Add, Tab, x10 y10 w500 h400 vMyTab -Wrap, Seeds|Gears|Eggs|Cosmetics|Settin
 
     Gui, Tab, 5
     Gui, Font, s9 cWhite Bold, Segoe UI
+    Gui, Add, GroupBox, x23 y50 w475 h340 cFFB875, Honey Shop
+    IniRead, SelectAllHoneys, %settingsFile%, Honey, SelectAllHoneys, 0
+    Gui, Add, Checkbox, % "x50 y90 vSelectAllHoneys gHandleSelectAll cFFB875 " . (SelectAllHoneys ? "Checked" : ""), Select All Honeys
+    Loop, % honeyItems.Length() {
+        IniRead, eVal, %settingsFile%, Honey, Item%A_Index%, 0
+        y := 125 + (A_Index - 1) * 25
+        Gui, Add, Checkbox, % "x50 y" y " vHoneyItem" A_Index " gHandleSelectAll cWhite " . (eVal ? "Checked" : ""), % honeyItems[A_Index]
+    }
+
+    Gui, Tab, 6
+    Gui, Font, s9 cWhite Bold, Segoe UI
     Gui, Add, GroupBox, x23 y50 w475 h340 cD3D3D3, Settings
 
 
@@ -732,7 +813,7 @@ Gui, Add, Button, x400 y140 w85 h18 gSavePrivateURL Background202020, Save Link
     Gui, Add, Button, x50 y335 w150 h40 gStartScan Background202020, Start Macro (F5)
     Gui, Add, Button, x320 y335 w150 h40 gQuit Background202020, Stop Macro (F7)
 
-       Gui, Tab, 6
+       Gui, Tab, 7
     Gui, Font, s9 cWhite Bold, Segoe UI
     Gui, Add, GroupBox, x23 y50 w475 h340 cD7A9E3, Donate
 
@@ -749,48 +830,49 @@ Gui, Add, Button, x413 y80 w70 h28 gDonate vDonate50000   BackgroundF0F0F0,50000
 
     Gui, Font, s9 cWhite, Segoe UI
 ; Row 1
-Gui, Add, Picture, x80  y140 w24 h24, %A_ScriptDir%\Images\avatars\RuizuKun_Dev.png
+Gui, Add, Picture, x80  y140 w24 h24, %A_ScriptDir%\Images\avatars\RuizuKun_Dev.png"
 Gui, Add, Text,    x110 y150 w200 h24, RuizuKun_Dev
 Gui, Add, Text,    x350 y150 w100 h24 +Right, 10000
 
 ; Row 2
-Gui, Add, Picture, x80  y170 w24 h24, %A_ScriptDir%\Images\avatars\KeoniHater666.png
+Gui, Add, Picture, x80  y170 w24 h24, %A_ScriptDir%\Images\avatars\KeoniHater666.png"
 Gui, Add, Text,    x110 y180 w200 h24, KeoniHater666
 Gui, Add, Text,    x350 y180 w100 h24 +Right, 2000
 
 ; Row 3
-Gui, Add, Picture, x80  y200 w24 h24, %A_ScriptDir%\Images\avatars\MarvelousMarmoset.png
+Gui, Add, Picture, x80  y200 w24 h24, %A_ScriptDir%\Images\avatars\MarvelousMarmoset.png"
 Gui, Add, Text,    x110 y210 w200 h24, MarvelousMarmoset
 Gui, Add, Text,    x350 y210 w100 h24 +Right, 1500
 
 ; Row 4
-Gui, Add, Picture, x80  y230 w24 h24, %A_ScriptDir%\Images\avatars\peanut1268a.png
+Gui, Add, Picture, x80  y230 w24 h24, %A_ScriptDir%\Images\avatars\peanut1268a.png"
 Gui, Add, Text,    x110 y240 w200 h24, peanut1268a
 Gui, Add, Text,    x350 y240 w100 h24 +Right, 1100
 
 ; Row 5
-Gui, Add, Picture, x80  y260 w24 h24, %A_ScriptDir%\Images\avatars\BarlosWithaB.png
+Gui, Add, Picture, x80  y260 w24 h24, %A_ScriptDir%\Images\avatars\BarlosWithaB.png"
 Gui, Add, Text,    x110 y270 w200 h24, BarlosWithaB
 Gui, Add, Text,    x350 y270 w100 h24 +Right, 1000
 
 ; Row 6
-Gui, Add, Picture, x80  y290 w24 h24, %A_ScriptDir%\Images\avatars\thefreakstoftoday.png
+Gui, Add, Picture, x80  y290 w24 h24, %A_ScriptDir%\Images\avatars\thefreakstoftoday.png"
 Gui, Add, Text,    x110 y300 w200 h24, thefreakstoftoday
 Gui, Add, Text,    x350 y300 w100 h24 +Right, 1000
 
 ; Row 7
-Gui, Add, Picture, x80  y320 w24 h24, %A_ScriptDir%\Images\avatars\zay_karate744.png
+Gui, Add, Picture, x80  y320 w24 h24, %A_ScriptDir%\Images\avatars\zay_karate744.png"
 Gui, Add, Text,    x110 y330 w200 h24, zay_karate744
 Gui, Add, Text,    x350 y330 w100 h24 +Right, 1000
 
 ; Row 8
-Gui, Add, Picture, x80  y350 w24 h24, %A_ScriptDir%\Images\avatars\thefiredragonbest.png
+Gui, Add, Picture, x80  y350 w24 h24, %A_ScriptDir%\Images\avatars\thefiredragonbest.png"
 Gui, Add, Text,    x110 y360 w200 h24, thefiredragonbest
 Gui, Add, Text,    x350 y360 w100 h24 +Right, 600
 
 
 
-    Gui, Tab, 7
+    Gui, Tab, 8
+
     Gui, Font, s9 cWhite, Segoe UI
     Gui, Add, GroupBox, x23 y50 w475 h340 cD3D3D3, Credits
 
@@ -900,6 +982,11 @@ HandleSelectAll:
     else if (A_GuiControl = "SelectAllEggs") {
         Loop, % eggItems.Length()
             GuiControl,, EggItem%A_Index%, % SelectAllEggs
+            Gosub, SaveSettings
+    }
+    else if (A_GuiControl = "SelectAllHoneys") {
+        Loop, % honeyItems.Length()
+            GuiControl,, HoneyItem%A_Index%, % SelectAllHoneys
             Gosub, SaveSettings
     }
     else if (A_GuiControl = "SelectAllGears") {
@@ -1054,6 +1141,11 @@ UpdateSelectedItems:
         if (eggItem%A_Index%)
             selectedEggItems.Push(eggItems[A_Index])
     }
+    selectedHoneyItems := []
+    Loop, % honeyItems.Length() {
+        if (HoneyItem%A_Index%)
+            selectedHoneyItems.Push(honeyItems[A_Index])
+    }
 Return
 
 GetSelectedItems() {
@@ -1071,6 +1163,11 @@ GetSelectedItems() {
     if (selectedEggItems.Length()) {
         result .= "Egg Items:`n"
         for _, name in selectedEggItems
+            result .= "  - " name "`n"
+    }
+    if (selectedHoneyItems.Length()) {
+        result .= "Honey Items:`n"
+        for _, name in selectedHoneyItems
             result .= "  - " name "`n"
     }
     return result
@@ -1091,6 +1188,7 @@ if (UseAlts) {
     global lastSeedMinute := -1
     global lastGearMinute := -1
     global lastEggShopMinute := -1
+    global lastHoneyShopMinute := -1
     global lastCosmeticShopMinute := -1
     global lastCosmeticShopHour   := -1 
     global lastSafeCheckMinute := -1
@@ -1169,6 +1267,9 @@ if (UseAlts) {
         eggAutoActive := 1
         SetTimer, AutoBuyEggShop, 1000 ; checks every second if it should queue
 
+        actionQueue.Push("BuyHoneyShop")
+        honeyAutoActive := 1
+        SetTimer, AutoBuyHoneyShop, 1000 ; checks every second if it should queue
         cosmeticAutoActive := 1
         SetTimer, AutoBuyCosmeticShop, 1000 ; checks every second if it should queue
 
@@ -1207,6 +1308,15 @@ while (started)
         eggMin := rem30sec // 60
         eggSec := Mod(rem30sec, 60)
         eggText := (eggSec < 10) ? eggMin . ":0" . eggSec : eggMin . ":" . eggSec
+        nextFullHour := (currentHour >= 23 ? 0 : currentHour + 1)
+        currentTotalSec := currentHour * 3600 + currentMinute * 60 + currentSecond
+        nextFullHourSec := nextFullHour * 3600
+        remSeconds := nextFullHourSec - currentTotalSec
+        if (remSeconds < 0)
+            remSeconds := 0
+        honeyM := remSeconds // 60
+        honeyS := Mod(remSeconds, 60)
+        honeyText := Format("{1:02d}:{2:02d}", honeyM, honeyS)
 
         totalSecNow := currentHour * 3600 + currentMinute * 60 + currentSecond
         nextCosHour := (Floor(currentHour/4) + 1) * 4
@@ -1232,6 +1342,9 @@ while (started)
         }
         if (selectedEggItems.Length()) {
             tooltipText .= "Egg Shop : " . eggText . "`n"
+        }
+        if (selectedHoneyItems.Length()) {
+            tooltipText .= "Honey Shop : " . honeyText . "`n"
         }
         if (BuyAllCosmetics) {
             tooltipText .= "Cosmetic Shop: " . cosText . "`n"
@@ -1363,6 +1476,34 @@ if (selectedEggItems.Length()) {
 
 Return
 
+AutoBuyHoneyShop:
+    if (cycleCount > 0 && Mod(currentMinute, 60) = 0 && currentMinute != lastHoneyShopMinute) {
+        lastHoneyShopMinute := currentMinute
+        SetTimer, PushBuyHoneyShop, -2000
+    }
+Return
+
+PushBuyHoneyShop: 
+    actionQueue.Push("BuyHoneyShop")
+Return
+
+BuyHoneyShop:
+    currentSection := "BuyHoneyShop"
+
+    if (selectedHoneyItems.Length()) {
+        if (UseAlts) {
+            for index, winID in windowIDs {
+                WinActivate, ahk_id %winID%
+                WinWaitActive, ahk_id %winID%,, 2
+                Gosub, HoneyShopPath
+            }
+        }
+        else {
+            Gosub, HoneyShopPath
+        } 
+    } 
+
+Return
 
 AutoBuyCosmeticShop:
     if ( cycleCount > 0
@@ -1468,7 +1609,7 @@ zoomAlignment:
 
     Sleep, 200
 
-    Loop, 6 {
+    Loop, 8 {
         Send, {WheelDown}
         Sleep, 20
     }
@@ -1548,6 +1689,85 @@ EggShopPath:
     Sleep, 100
     SendDiscordMessage(webhookURL, "**[EGGS COMPLETED]**")
 
+Return
+
+HoneyShopPath:
+    honeyCompleted := false
+    shopOpened := false
+
+    WinActivate, ahk_exe RobloxPlayerBeta.exe
+    Sleep, 100
+    uiUniversal("616161616062606")
+    Sleep, % FastMode ? 100 : 1000
+    Send {D down}
+    Sleep, 9000
+    Send {D up}
+    Send {W down}
+    Sleep, 540
+    Send {W up}
+    Send {D down}
+    Sleep, 245
+    Send {D up}
+    Sleep, % FastMode ? 300 : 1000
+    Send {e}
+    SendDiscordMessage(webhookURL, "**[HONEY CYCLE]**")
+    Sleep, % FastMode ? 3000 : 5000
+    SafeClickRelative(0.7, 0.5)
+
+    ; check
+    Loop, 5 {
+        if (simpleDetect(0x03FBDC, 10, 0.54, 0.20, 0.65, 0.325)) {
+            shopOpened := true
+            ToolTip, Honey Shop Opened
+            SetTimer, HideTooltip, -1500
+            SendDiscordMessage(webhookURL, "Honey Shop Opened.")
+            Break
+        }
+        Sleep, 2000
+    }
+
+    if (!shopOpened) {
+        SendDiscordMessage(webhookURL, "Failed To Detect Honey Shop Opening [Error]" (PingSelected ? " <@" . discordUserID . ">" : ""))
+        uiUniversal("63636362626263616161616363636262626361616161606561646056")
+        Return
+    }
+
+    uiUniversal("63636361616464636363636161616464606056", 0)
+    Sleep, 100
+    positions := []
+    Loop, % honeyItems.Length() {
+        if (HoneyItem%A_Index%)
+            positions.Push(A_Index)
+    }
+    positions.Sort()
+    currentPos := 1
+    for _, targetPos in positions {
+        delta := targetPos - currentPos
+        if (delta > 0)
+            Loop, % delta
+                uiUniversal("4", 0, 1)
+        else if (delta < 0)
+            Loop, % -delta
+                uiUniversal("3", 0, 1)
+        currentItem := honeyItems[targetPos]
+        uiUniversal("0646", 0, 1)
+        Sleep, % FastMode ? 50 : 200
+        quickDetect(0x26EE26, 0x1DB31D, 5, 0.4262, 0.2903, 0.6918, 0.8208)
+        Sleep, 50
+        uiUniversal("3605", 0, 1)
+        Sleep, % FastMode ? 50 : 200
+        currentPos := targetPos
+        Sleep, 100
+    }
+
+    SendDiscordMessage(webhookURL, "Honey Shop Closed.")
+    honeyCompleted := true
+
+    if (honeyCompleted) {
+        Sleep, 500
+        uiUniversal("626066666606", 1, 1)
+        SendDiscordMessage(webhookURL, "**[HONEY COMPLETED]**")
+    }
 Return
 
 SeedShopPath:
@@ -1871,6 +2091,8 @@ SaveSettings:
 
     Loop, % seedItems.Length()
         IniWrite, % (SeedItem%A_Index% ? 1 : 0), %settingsFile%, Seed, Item%A_Index%
+    Loop, % honeyItems.Length()
+        IniWrite, % (HoneyItem%A_Index% ? 1 : 0), %settingsFile%, Honey, Item%A_Index%
 
 
     IniWrite, %AutoAlign%, %settingsFile%, Main, AutoAlign
@@ -1880,6 +2102,7 @@ SaveSettings:
     IniWrite, %PingSelected%, %settingsFile%, Main, PingSelected
     IniWrite, %BuyAllCosmetics%, %settingsFile%, Cosmetic, BuyAllCosmetics
     IniWrite, %SelectAllEggs%, %settingsFile%, Egg, SelectAllEggs
+    IniWrite, %SelectAllHoneys%, %settingsFile%, Honey, SelectAllHoneys
     IniWrite, %SelectAllSeeds%, %settingsFile%, Seed, SelectAllSeeds
     IniWrite, %SelectAllGears%, %settingsFile%, Gear, SelectAllGears
     IniWrite, %UINavToggle%, %settingsFile%, Main, UINavToggle
