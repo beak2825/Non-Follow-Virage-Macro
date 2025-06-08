@@ -12,7 +12,7 @@ SetWorkingDir %A_ScriptDir%
 
 ; globals
 
-global version := "1"
+global version := "2"
 global versionURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Images/ver1.txt"
 global updateURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Main1.ahk"
 global mainFile := A_ScriptFullPath
