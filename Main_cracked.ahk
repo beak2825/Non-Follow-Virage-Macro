@@ -22,7 +22,7 @@ global GAME_PASS_IDS := [1244038348, 1222540123, 1222262383, 1222306189, 1220930
 EnvGet, LOCAL_COMPUTER_NAME, ComputerName
 global WEB_APP_URL := "https://script.google.com/macros/s/AKfycbys_0dn2UPA4fXqNgqqYIHnUxoDUIusA8BoIVSghSJ8BR7colxlDEYLhqvv4OVCE6Is/exec"
 global version := "7"
-global versionURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Images/ver_exe.txt"
+global versionURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Images/ver_ahk.txt"
 global updateURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Main.exe"
 global mainFile := A_ScriptFullPath
 
