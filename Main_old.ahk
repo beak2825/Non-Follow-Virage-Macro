@@ -13,7 +13,7 @@ SetWorkingDir %A_ScriptDir%
 ; globals
 
 global version := "3"
-global versionURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Images/ver2.txt?a=true"
+global versionURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Images/ver_exe.txt"
 global updateURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Main1.ahk"
 global mainFile := A_ScriptFullPath
 global webhookURL
