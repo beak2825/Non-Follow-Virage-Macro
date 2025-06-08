@@ -19,6 +19,7 @@ global mainFile := A_ScriptFullPath
 global webhookURL
 global discordUserID
 global PingSelected
+global AutoHoney
 
 global cycleCount := 0
 
@@ -34,7 +35,9 @@ global seedAutoActive := 0
 global gearAutoActive := 0
 global eggAutoActive  := 0
 global honeyAutoActive := 0
+global autoHoneyActive := 0
 global safeCheckAutoActive := 0
+global lastHoneyHour := -1
 
 global triedVerify := 0 
 
@@ -531,22 +534,23 @@ seedItems := ["Carrot Seed", "Strawberry Seed", "Blueberry Seed", "Orange Tulip"
              , "Tomato Seed", "Corn Seed", "Daffodil Seed", "Watermelon Seed"
              , "Pumpkin Seed", "Apple Seed", "Bamboo Seed", "Coconut Seed"
              , "Cactus Seed", "Dragon Fruit Seed", "Mango Seed", "Grape Seed"
-             , "Mushroom Seed", "Pepper Seed", "Cacao Seed", "Beanstalk Seed", "Ember Lily"] ;
+             , "Mushroom Seed", "Pepper Seed", "Cacao Seed", "Beanstalk Seed", "Ember Lily"]
 
 gearItems := ["Watering Can", "Trowel", "Recall Wrench", "Basic Sprinkler", "Advanced Sprinkler"
              , "Godly Sprinkler", "Lightning Rod", "Master Sprinkler", "Favorite Tool", "Harvest Tool", "Friendship Pot"]
 
-eggItems := ["Common Egg", "Uncommon Egg", "Rare Egg", "Legendary Egg", "Mythical Egg"
-             , "Bug Egg"]
+eggItems := ["Common Egg", "Uncommon Egg", "Rare Egg", "Legendary Egg"
+            , "Mythical Egg", "Bug Egg"]
 
-cosmeticItems := ["Cosmetic 1", "Cosmetic 2", "Cosmetic 3", "Cosmetic 4", "Cosmetic 5"
-             , "Cosmetic 6",  "Cosmetic 7", "Cosmetic 8", "Cosmetic 9"]
-honeyItems := ["Flower Seed Pack", "Lavender Seed", "Nectarshade Seed", "Nectarine Seed", "Hive Fruit Seed", "Pollen Radar", "Nectar Staff", "Honey Sprinkler", "Bee Egg"
-             , "Bee Crate",  "Honey Comb", "Bee Chair", "Honey Torch", "Honey Walkway"]
-			 
-			 
-			 
-			 
+cosmeticItems := ["Cosmetic 1", "Cosmetic 2", "Cosmetic 3", "Cosmetic 4"
+                , "Cosmetic 5"
+                , "Cosmetic 6",  "Cosmetic 7", "Cosmetic 8", "Cosmetic 9"]
+
+honeyItems := ["Flower Seed Pack", "Lavender Seed", "Nectarshade Seed"
+            ,"Nectarine Seed", "Hive Fruit Seed", "Pollen Radar"
+            , "Nectar Staff", "Honey Sprinkler", "Bee Egg", "Bee Crate"
+            , "Honey Comb", "Bee Chair", "Honey Torch", "Honey Walkway"]
+
 settingsFile := A_ScriptDir "\settings.ini"
 
 started := 0
@@ -564,7 +568,7 @@ ShowWelcome:
     Gui, 99: Margin, 10, 10
     Gui, 99: Add, Picture, x10 y0 w768 h432, %A_ScriptDir%\Images\welcome.png
     Gui, 99: Add, Button, x240 y+10 w300 h40 gContinue, Continue
-    Gui, 99: Show, w788 h492 Center, Virage Grow a Garden Macro [COSMETIC UPDATE]
+    Gui, 99: Show, w788 h492 Center, Virage Grow a Garden Macro [COSMETIC UPDATE] ver2
 return
 
 ShowVerify:
