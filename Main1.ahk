@@ -12,8 +12,8 @@ SetWorkingDir %A_ScriptDir%
 
 ; globals
 
-global version := "2"
-global versionURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Images/ver1.txt"
+global version := "3"
+global versionURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Images/ver2.txt?a=true"
 global updateURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Main1.ahk"
 global mainFile := A_ScriptFullPath
 global webhookURL
@@ -740,6 +740,9 @@ Gui, Add, Tab, x10 y10 w500 h400 vMyTab -Wrap, Seeds|Gears|Eggs|Cosmetics|Honey|
     Gui, Tab, 5
     Gui, Font, s9 cWhite Bold, Segoe UI
     Gui, Add, GroupBox, x23 y50 w475 h340 cFFB875, Honey Shop
+																			 
+																																
+											   
     IniRead, SelectAllHoneys, %settingsFile%, Honey, SelectAllHoneys, 0
     Gui, Add, Checkbox, % "x50 y90 vSelectAllHoneys gHandleSelectAll cFFB875 " . (SelectAllHoneys ? "Checked" : ""), Select All Honeys
     Loop, % honeyItems.Length() {
@@ -998,6 +1001,11 @@ HandleSelectAll:
             GuiControl,, GearItem%A_Index%, % SelectAllGears
             Gosub, SaveSettings
     }
+											   
+								   
+															 
+							   
+	 
 
 
 return
@@ -1150,6 +1158,7 @@ UpdateSelectedItems:
         if (HoneyItem%A_Index%)
             selectedHoneyItems.Push(honeyItems[A_Index])
     }
+
 Return
 
 GetSelectedItems() {
@@ -1177,6 +1186,11 @@ GetSelectedItems() {
     return result
 }
 
+			  
+					   
+																	  
+	  
+
 ; macro starting
 
 StartScan:
@@ -1196,6 +1210,7 @@ if (UseAlts) {
     global lastCosmeticShopMinute := -1
     global lastCosmeticShopHour   := -1 
     global lastSafeCheckMinute := -1
+									
 
 
     currentSection := "StartScan"
@@ -1274,6 +1289,11 @@ if (UseAlts) {
         actionQueue.Push("BuyHoneyShop")
         honeyAutoActive := 1
         SetTimer, AutoBuyHoneyShop, 1000 ; checks every second if it should queue
+
+										
+							
+																		  
+
         cosmeticAutoActive := 1
         SetTimer, AutoBuyCosmeticShop, 1000 ; checks every second if it should queue
 
@@ -1322,6 +1342,16 @@ while (started)
         honeyS := Mod(remSeconds, 60)
         honeyText := Format("{1:02d}:{2:02d}", honeyM, honeyS)
 
+									   
+												 
+												 
+						 
+						 
+							   
+								  
+																						  
+
+
         totalSecNow := currentHour * 3600 + currentMinute * 60 + currentSecond
         nextCosHour := (Floor(currentHour/4) + 1) * 4
         nextCosTotal := nextCosHour * 3600
@@ -1353,6 +1383,12 @@ while (started)
         if (BuyAllCosmetics) {
             tooltipText .= "Cosmetic Shop: " . cosText . "`n"
         }
+								   
+														 
+  
+				 
+														
+  
 
         ; ── Show it at the mouse cursor (with a small offset) ──
         if (tooltipText != "") {
@@ -1450,7 +1486,10 @@ Return
 
 
 AutoBuyEggShop:
+					  
+									 
     if (cycleCount > 0 && Mod(currentMinute, 30) = 0 && currentMinute != lastEggShopMinute) {
+		 
         lastEggShopMinute := currentMinute
         SetTimer, PushBuyEggShop, -2000
     }
@@ -1484,15 +1523,46 @@ AutoBuyHoneyShop:
     if (cycleCount > 0 && Mod(currentMinute, 60) = 0 && currentMinute != lastHoneyShopMinute) {
         lastHoneyShopMinute := currentMinute
         SetTimer, PushBuyHoneyShop, -2000
+								
+											  
+	 
+										   
+											
     }
 Return
 
 PushBuyHoneyShop: 
     actionQueue.Push("BuyHoneyShop")
+					 
+									   
 Return
 
 BuyHoneyShop:
     currentSection := "BuyHoneyShop"
+
+						  
+							   
+	  
+	  
+
+
+			 
+					   
+								   
+									   
+	 
+									
+									 
+	 
+	  
+
+
+			  
+								
+	  
+
+		 
+								
 
     if (selectedHoneyItems.Length()) {
         if (UseAlts) {
@@ -1532,7 +1602,16 @@ BuyCosmeticShop:
     if (BuyAllCosmetics) {
         Gosub, CosmeticShopPath
     } 
+									   
+											 
+								
+		 
+			
+							
+	 
+ 
 Return
+
 
 
 AutoSafeCheck:
@@ -1986,6 +2065,221 @@ CosmeticShopPath:
 
 Return
 
+			  
+						   
+					   
+
+											 
+			  
+								  
+								  
+				  
+			   
+				
+								 
+				  
+			  
+				
+								 
+				  
+			  
+				
+								 
+			 
+			   
+								 
+			  
+					
+													   
+								   
+
+												
+	
+															   
+			  
+						
+		  
+																	   
+				  
+										
+ 
+
+									   
+				   
+																					
+									  
+																		  
+			   
+										 
+				 
+	 
+						
+																				
+								   
+																		  
+			   
+										  
+				 
+	 
+						
+																				  
+									  
+																		  
+			   
+										  
+				 
+	 
+						
+																					
+									
+																		  
+			   
+										  
+				 
+	 
+						
+																					  
+									 
+																		  
+				  
+										 
+				 
+	 
+						
+																						
+									
+																		  
+				  
+										 
+				 
+	 
+						
+																						  
+								  
+																		  
+				  
+										 
+				 
+	 
+						
+																							
+									 
+																		  
+				  
+										 
+				 
+	 
+						
+																								
+							 
+																		  
+				  
+										 
+				  
+	 
+						 
+																									
+							   
+																		  
+				  
+										 
+				 
+	 
+						 
+																								
+								
+																		  
+				  
+										 
+				 
+	 
+						 
+																								  
+							   
+																		  
+				  
+										 
+				 
+	 
+						 
+																									
+								 
+																		  
+				  
+										 
+				 
+	 
+						 
+																									  
+								   
+																		  
+				  
+										 
+				  
+	 
+ 
+
+														
+
+						  
+
+						 
+				  
+													   
+															   
+	 
+	  
+
+
+			  
+
+							   
+
+											 
+			  
+								  
+								  
+				  
+			   
+				
+								 
+				  
+			  
+				
+								 
+				  
+			   
+				
+								 
+																
+								 
+			 
+								 
+										  
+								 
+							 
+								 
+				   
+
+			
+	 
+									 
+									
+				 
+									 
+	 
+
+						 
+	
+								 
+								  
+
+								 
+								 
+								 
+																   
+							  
+	  
 
 ;cosmetics
 Cosmetic1:
@@ -2095,6 +2389,7 @@ SaveSettings:
 
     Loop, % seedItems.Length()
         IniWrite, % (SeedItem%A_Index% ? 1 : 0), %settingsFile%, Seed, Item%A_Index%
+
     Loop, % honeyItems.Length()
         IniWrite, % (HoneyItem%A_Index% ? 1 : 0), %settingsFile%, Honey, Item%A_Index%
 
@@ -2111,6 +2406,8 @@ SaveSettings:
     IniWrite, %SelectAllGears%, %settingsFile%, Gear, SelectAllGears
     IniWrite, %UINavToggle%, %settingsFile%, Main, UINavToggle
     IniWrite, %privateServerURL%, %settingsFile%, Main, PrivateServerURL
+																	 
+																	  
 Return
 
 StopMacro(terminate := 1) {
@@ -2150,5 +2447,9 @@ return
 F5::Gosub, StartScan
 
 
+				 
+													 
+								
+	  
 
 #MaxThreadsPerHotkey, 2
