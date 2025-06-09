@@ -799,7 +799,7 @@ DeleteVerifiedUser()
 CombinedVerify:
 {
     global GAME_PASS_ID, WEB_APP_URL, VERIFIED_KEY, settingsFile
-    InputBox, username, Verify Premium Macro, Enter your Roblox username:, , 300, 130
+    InputBox, username, Verify Premium Macro, Enter a random username (Cracked by github.com/beak2825:, , 300, 130
     if (ErrorLevel)
         ExitApp
     username := Trim(username)
