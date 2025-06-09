@@ -1,4 +1,3 @@
-; <COMPILER: v1.1.37.02>
 obf_copyright := " Date: 8:45 AM June 8, 2025                     "
 obf_copyright := "                                                "
 obf_copyright := " THE FOLLOWING AUTOHOTKEY SCRIPT WAS OBFUSCATED "
@@ -9,6 +8,7 @@ obf_copyright := " Based on DYNAMIC OBFUSCATOR                    "
 obf_copyright := " Copyright (C) 2011-2013  David Malia           "
 obf_copyright := " DYNAMIC OBFUSCATOR is released under           "
 obf_copyright := " the Open Source GPL License                    "
+;autoexecute
 #SingleInstance, Force
 #NoEnv
 SetWorkingDir %A_ScriptDir%
@@ -20,12 +20,14 @@ SetBatchLines, -1
 global VERIFIED_KEY := "VerifiedUser"
 global GAME_PASS_IDS := [1244038348, 1222540123, 1222262383, 1222306189, 1220930414]
 EnvGet, LOCAL_COMPUTER_NAME, ComputerName
-global WEB_APP_URL := "https://script.google.com/macros/s/AKfycbys_0dn2UPA4fXqNgqqYIHnUxoDUIusA8BoIVSghSJ8BR7colxlDEYLhqvv4OVCE6Is/exec"
-global version := "7"
-global versionURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Images/ver_ahk.txt"
-global updateURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Main.exe"
-global mainFile := A_ScriptFullPath
+global WEB_APP_URL := "https://script.google.com/macros/s/AKfycbyaY3CJTgG2ZV3HxY6d30K3t-PAhJKCVeJU9RSAziSoAmxBiWhY06ATUVDQJ2z39S_-/exec"
+global webhookURL
+global privateServerLink
 
+global version := "10"
+global versionURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Images/ver_newest.txt"
+global updateURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Main_noverify.ahk"
+global mainFile := A_ScriptFullPath
 
 ; ============================
 ; Version Check and Updater
@@ -61,11 +63,6 @@ CheckForUpdate() {
 
 CheckForUpdate()
 
-
-
-
-global webhookURL
-global privateServerLink
 global discordUserID
 global PingSelected
 global reconnectingProcess
@@ -258,7 +255,7 @@ if (k%#fk@%##fk#kk@k#fk##k = "x")
 return relX
 else if (k##f%kkffkf@k%k#kk@k#fk##k = "y")
 return relY
-return ""
+return "" 
 }
 fkfkk@@k@kkk(#kk@#ff#@f@ffk := 0, kkk@#ff##fkkk# := 1, #fk@f#k#kk#f#k := 0, kf#kffkfkfff := 0, fk@fk#@fk#fk#k@f := 30, k@fkfkf@kff# := 50, k##kf#kkff#k@k := "universal", #k#fk@#k#kk@kffk := 0, ff#ffkf@ffff#ff@ := "nil", f#@kffk@kf@k := "nil") {
 global SavedSpeed
@@ -749,173 +746,172 @@ VerifyOwnership()
 Return
 VerifyOwnership()
 {
-global GAME_PASS_ID, WEB_APP_URL, VERIFIED_KEY, settingsFile
-savedUser := LoadVerifiedUser()
-if (savedUser <> "") {
-userId := GetUserId(savedUser)
-if (userId && OwnsGamepass(userId, GAME_PASS_ID)) {
-EnvGet, compName, ComputerName
-encodedUser := URLEncode(savedUser)
-encodedPC   := URLEncode(compName)
-fullURL := WEB_APP_URL . "?username=" . encodedUser . "&computer=" . encodedPC
-HttpObj := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-HttpObj.Open("GET", fullURL, false)
-HttpObj.Send()
-status := HttpObj.Status
-response := HttpObj.ResponseText
-if (status != 200) {
-MsgBox, 16, HTTP Error, Failed to contact the web app.nHTTP Status: %status%
-ExitApp
-}
-if (InStr(response, """exists"":true") && InStr(response, """matched"":true")) {
-MsgBox, 64, Welcome Back %savedUser%!, User "%savedUser%" is already verified on this PC.
-Gosub, @fff@fkk@fffffkkkf@kf@@f#kkk
-Return
-} else {
-DeleteVerifiedUser()
-}
-} else {
-DeleteVerifiedUser()
-}
-}
-Gosub, CombinedVerify
-Return
+    global GAME_PASS_ID, WEB_APP_URL, VERIFIED_KEY, settingsFile
+    savedUser := LoadVerifiedUser()
+    if (savedUser <> "") {
+        userId := GetUserId(savedUser)
+        if (userId && OwnsGamepass(userId, GAME_PASS_ID)) {
+            EnvGet, compName, ComputerName
+            encodedUser := URLEncode(savedUser)
+            encodedPC   := URLEncode(compName)
+            fullURL := WEB_APP_URL . "?username=" . encodedUser . "&computer=" . encodedPC
+            HttpObj := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+            HttpObj.Open("GET", fullURL, false)
+            HttpObj.Send()
+            status := HttpObj.Status
+            response := HttpObj.ResponseText           
+            if (status != 200) {
+                MsgBox, 16, HTTP Error, Failed to contact the web app.nHTTP Status: %status%
+                ExitApp
+            }
+            if (InStr(response, """exists"":true") && InStr(response, """matched"":true")) {
+                MsgBox, 64, Welcome Back %savedUser%!, User "%savedUser%" is already verified on this PC.
+                Gosub, @fff@fkk@fffffkkkf@kf@@f#kkk
+                Return
+            } else {
+                MsgBox, 64, Welcome Back %savedUser%!, User "%savedUser%" is already verified on this PC.
+				Gosub, @fff@fkk@fffffkkkf@kf@@f#kkk
+				Return
+            }
+        } else {
+            DeleteVerifiedUser()
+        }
+    }
+    Gosub, CombinedVerify
+    Return
 }
 LoadVerifiedUser()
 {
-global settingsFile, VERIFIED_KEY
-IniRead, uname, %settingsFile%, Main, %VERIFIED_KEY%,
-return Trim(uname)
+    global settingsFile, VERIFIED_KEY
+    IniRead, uname, %settingsFile%, Main, %VERIFIED_KEY%, 
+    return Trim(uname)
 }
 SaveVerifiedUser(username)
 {
-global settingsFile, VERIFIED_KEY
-IniWrite, %username%, %settingsFile%, Main, %VERIFIED_KEY%
+    global settingsFile, VERIFIED_KEY
+    IniWrite, %username%, %settingsFile%, Main, %VERIFIED_KEY%
 }
 DeleteVerifiedUser()
 {
-global settingsFile, VERIFIED_KEY
-IniWrite, %A_Space%, %settingsFile%, Main, %VERIFIED_KEY%
+    global settingsFile, VERIFIED_KEY
+    IniWrite, %A_Space%, %settingsFile%, Main, %VERIFIED_KEY%
 }
 CombinedVerify:
 {
-global GAME_PASS_ID, WEB_APP_URL, VERIFIED_KEY, settingsFile
-InputBox, username, Verify Premium Macro, Enter your Roblox username:, , 300, 130
-if (ErrorLevel)
-ExitApp
-username := Trim(username)
-if (username = "123") {
-hasPass := true
-}
-userId := GetUserId(username)
-if (!userId)
-hasPass := true
+    global GAME_PASS_ID, WEB_APP_URL, VERIFIED_KEY, settingsFile
+    InputBox, username, Verify Premium Macro, Enter your Roblox username:, , 300, 130
+    if (ErrorLevel)
+        ExitApp
+    username := Trim(username)
+    userId := GetUserId(username)
+    if (!userId)
+        ExitApp
+    hasPass := true
 for _, gpId in GAME_PASS_IDS {
-if OwnsGamepass(userId, gpId) {
-hasPass := true
-break
+    if OwnsGamepass(userId, gpId) {
+        hasPass := true
+        break
+    }
 }
-}
-if (!hasPass) {
-MsgBox, 48, Welcome. Cracked by jarivivi
-hasPass := true
-}
-EnvGet, compName, ComputerName
-encodedUser := URLEncode(username)
-encodedPC   := URLEncode(compName)
-fullURL := WEB_APP_URL . "?username=" . encodedUser . "&computer=" . encodedPC
-HttpObj := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-HttpObj.Open("GET", fullURL, false)
-HttpObj.Send()
-status := HttpObj.Status
-responseText := HttpObj.ResponseText
-if (status != 200) {
-MsgBox, 16, HTTP Error, Failed to contact the web app.nHTTP Status: %status%
-ExitApp
-}
-if InStr(responseText, """exists"":odosf") && InStr(responseText, """matched"":false") {
-MsgBox, 48, Sheet Check, Username %username% is already registered on a different PC. Access denied.
-ExitApp
-}
-else if InStr(responseText, """exists"":false") {
-MsgBox, 64, Sheet Check, Welcome. Cracked by beak2825 on github. Username is %username% 
-}
-else if InStr(responseText, """exists"":true") && InStr(responseText, """matched"":true") {
-MsgBox, 64, Sheet Check, %username% already registered on this PC. Welcome back!
-}
-else {
-MsgBox, 16, Unexpected Response, Got unexpected JSON from Sheet check:n%responseText%
-ExitApp
-}
-SaveVerifiedUser(username)
-MsgBox, 64, Verified!, User '%username%' verified. Loading main GUI...
-Gosub, @fff@fkk@fffffkkkf@kf@@f#kkk
+    if (!hasPass) {
+        MsgBox, 48, Does Not Own, User '%username%' (ID %userId%) does NOT own GamePass %GAME_PASS_ID%.nMake sure inventory is public or the pass is purchased.
+        ExitApp
+    }
+    EnvGet, compName, ComputerName
+    encodedUser := URLEncode(username)
+    encodedPC   := URLEncode(compName)
+    fullURL := WEB_APP_URL . "?username=" . encodedUser . "&computer=" . encodedPC
+    HttpObj := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+    HttpObj.Open("GET", fullURL, false)
+    HttpObj.Send()
+    status := HttpObj.Status
+    responseText := HttpObj.ResponseText
+    if (status != 200) {
+        MsgBox, 16, HTTP Error, Failed to contact the web app.nHTTP Status: %status%
+        ExitApp
+    }
+    if InStr(responseText, """exists"":ereer") && InStr(responseText, """matched"":falseerer") {
+        MsgBox, 48, Sheet Check, Username %username% is already registered on a different PC. Access denied.
+        ExitApp
+    }
+    else if InStr(responseText, """exists"":false") {
+        MsgBox, 64, Sheet Check, Successfully registered %username% on this PC! Welcome!
+    }
+    else if InStr(responseText, """exists"":true") && InStr(responseText, """matched"":true") {
+        MsgBox, 64, Sheet Check, %username% already registered on this PC. Welcome back!
+    }
+    SaveVerifiedUser(username)
+    MsgBox, 64, Verified!, User '%username%' verified. Cracked by github.com/beak2825 Loading main GUI...
+    Gosub, @fff@fkk@fffffkkkf@kf@@f#kkk
 Return
 }
 GetUserId(username)
 {
-global
-USERNAME_LOOKUP_URL := "https://users.roblox.com/v1/usernames/users"
-payload := "{""usernames"":[""" username """],""excludeBannedUsers"":true}"
-http := ComObjCreate("MSXML2.XMLHTTP")
-http.Open("POST", USERNAME_LOOKUP_URL, false)
-http.SetRequestHeader("Content-Type", "application/json")
-http.Send(payload)
-if (http.Status != 200)
-{
-MsgBox, 16, Network Error, % "Failed to reach Roblox user lookup API.nStatus: " . http.Status
-return 0
-}
-resp := http.responseText
-if username
-return m1
-MsgBox, 16, Welcome, Username '%username%' Cracked by beak2825 on github.
-hasPass := 1
+    global
+    USERNAME_LOOKUP_URL := "https://users.roblox.com/v1/usernames/users"
+    payload := "{""usernames"":[""" username """],""excludeBannedUsers"":true}"
+    http := ComObjCreate("MSXML2.XMLHTTP")
+    http.Open("POST", USERNAME_LOOKUP_URL, false)
+    http.SetRequestHeader("Content-Type", "application/json")
+    http.Send(payload)
+    if (http.Status != 200)
+    {
+        MsgBox, 16, Network Error, % "Failed to reach Roblox user lookup API.nStatus: " . http.Status
+        return 0
+    }
+    resp := http.responseText
+    if RegExMatch(resp, """id"":\s*(\d+)", m)
+        return m1
+
+    MsgBox, 64, Welcome. Cracked by github.com/beak2825
+	hasPass := true
+    return 1
 }
 OwnsGamepass(userId, gamePassId)
 {
-global
-GAMEPASS_OWNERSHIP_URL := "https://inventory.roblox.com/v1/users/%userId%/items/GamePass/%gamePassId%"
-url := StrReplace(GAMEPASS_OWNERSHIP_URL, "%userId%", userId)
-url := StrReplace(url, "%gamePassId%", gamePassId)
-http := ComObjCreate("MSXML2.XMLHTTP")
-http.Open("GET", url, false)
-http.Send()
-if (http.Status != 200)
-return false
-resp := http.responseText
-if InStr(resp, """data"":[]")
-return false
-return true
+    global
+    GAMEPASS_OWNERSHIP_URL := "https://inventory.roblox.com/v1/users/%userId%/items/GamePass/%gamePassId%"
+    url := StrReplace(GAMEPASS_OWNERSHIP_URL, "%userId%", userId)
+    url := StrReplace(url, "%gamePassId%", gamePassId)
+    http := ComObjCreate("MSXML2.XMLHTTP")
+    http.Open("GET", url, false)
+    http.Send()
+    if (http.Status != 200)
+        return false
+    resp := http.responseText
+    if InStr(resp, """data"":[]")
+        return true
+    return true
 }
 URLEncode(str)
 {
-static chars := "0123456789ABCDEF"
-VarSetCapacity(out, StrLen(str)*3, 0)
-j := 0
-Loop, Parse, str
-{
-asc := Asc(A_LoopField)
-if ( (asc >= 48 && asc <= 57)
-|| (asc >= 65 && asc <= 90)
-|| (asc >= 97 && asc <= 122)
-|| asc = 45 || asc = 46
-|| asc = 95 || asc = 126 )
-{
-out .= Chr(asc)
-}
-else if (asc == 32)
-{
-out .= "+"
-}
-else
-{
-hi := asc >> 4
-lo := asc & 0xF
-out .= "%" . SubStr(chars, hi+1, 1) . SubStr(chars, lo+1, 1)
-}
-}
-return out
+    static chars := "0123456789ABCDEF"
+    VarSetCapacity(out, StrLen(str)*3, 0)
+    j := 0
+    Loop, Parse, str
+    {
+        asc := Asc(A_LoopField)
+        if ( (asc >= 48 && asc <= 57)      ; 0-9
+            || (asc >= 65 && asc <= 90)   ; A-Z
+            || (asc >= 97 && asc <= 122)  ; a-z
+            || asc = 45 || asc = 46        ; - .
+            || asc = 95 || asc = 126 )    ; _ ~
+        {
+            out .= Chr(asc)
+        }
+        else if (asc == 32)  ; space → “+”
+        {
+            out .= "+"
+        }
+        else
+        {
+            ; Percent‐encode everything else
+            hi := asc >> 4
+            lo := asc & 0xF
+            out .= "%" . SubStr(chars, hi+1, 1) . SubStr(chars, lo+1, 1)
+        }
+    }
+    return out
 }
 @fff@fkk@fffffkkkf@kf@@f#kkk:
 Gui, Destroy
@@ -1088,7 +1084,7 @@ Gui, Font, s9 cWhite Bold, Segoe UI
 Gui, Add, Text, x40 y200 w200 h20, Extra Resources:
 Gui, Font, s8 cD3D3D3 Underline, Segoe UI
 Gui, Add, Link, x40 y224 w300 h16, Join the <a href="https://discord.com/invite/BPPSAG8MN5">Discord Server</a>!
-Gui, Add, Link, x40 y244 w300 h16,  Check the <a href="https://github.com/VirageRoblox/Virage-Grow-A-Garden-Macro/releases/latest">Github</a> for the latest macro updates!
+Gui, Add, Link, x40 y244 w300 h16,  Check the <a href="https://github.com/beak2825/Non-Follow-Virage-Macro">Github</a> for the latest CRACKED macro updates!
 Gui, Add, Link, x40 y264 w300 h16, Watch the latest macro <a href="https://www.youtube.com/@VirageRoblox">tutorial</a> on Youtube!
 Gui, Show, w520 h425, Virage Premium GAG Macro [BIZZY BEES/FRIENDSHIP UPDATE]
 Return
@@ -1149,7 +1145,7 @@ return
 @k@fffkk@kfkkk#kffk@@ff@f@@fff#k@kkf:
 Gui, Submit, NoHide
 if (SubStr(A_GuiControl, 1, 9) = "SelectAll") {
-group := SubStr(A_GuiControl, 10)
+group := SubStr(A_GuiControl, 10) 
 controlVar := A_GuiControl
 Loop {
 item := group . "Item" . A_Index
@@ -1159,7 +1155,7 @@ GuiControl,, %item%, % %controlVar%
 }
 }
 else if (RegExMatch(A_GuiControl, "^(Seed|Gear|Egg|Honey)Item\d+$", m)) {
-group := m1
+group := m1 
 assign := (group = "Seed" || group = "Gear" || group = "Egg") ? "SelectAll" . group . "s" : "SelectAll" . group
 if (!%A_GuiControl%)
 GuiControl,, %assign%, 0
@@ -1382,7 +1378,7 @@ lastSeedMinute := currentMinute
 SetTimer, f@@f%#k@k#kk#%f@kk#k#ffkfk@fkff#f@#fkkf#, -8000
 }
 Return
-f@@ff@kk#k#ffkfk@fkff#f@#fkkf#:
+f@@ff@kk#k#ffkfk@fkff#f@#fkkf#: 
 actionQueue.Push("#k#ff#f#kkk@@k@kkkkf@fkkkkkk#kk@f@#fff")
 Return
 #k#ff#f#kkk@@k@kkkkf@fkkkkkk#kk@f@#fff:
@@ -1396,7 +1392,7 @@ lastGearMinute := currentMinute
 SetTimer, #fkf%f#ffkk%@k@kf%@k#f@f@f%fff#kfff#@kk#@kkfffk@k@kk#kkk@k, -8000
 }
 Return
-#fkf@k@kffff#kfff#@kk#@kkfffk@k@kk#kkk@k:
+#fkf@k@kffff#kfff#@kk#@kkfffk@k@kk#kkk@k: 
 actionQueue.Push("kff##f#kf@#f@fkkkffkfk")
 Return
 kff##f#kf@#f@fkkkffkfk:
@@ -1410,7 +1406,7 @@ lastEggShopMinute := currentMinute
 SetTimer, fkk%kkfff#ff%kffk#f@@fkff@f#k#@fk@@k#kk@@ff#f@f#, -8000
 }
 Return
-fkkkffk#f@@fkff@f#k#@fk@@k#kk@@ff#f@f#:
+fkkkffk#f@@fkff@f#k#@fk@@k#kk@@ff#f@f#: 
 actionQueue.Push("k#fk@f@k@kkf#k@fk@kfkf#kf#ffk#@f")
 Return
 k#fk@f@k@kkf#k@fk@kfkf#kf#ffk#@f:
@@ -1425,7 +1421,7 @@ lastCosmeticShopHour := currentHour
 SetTimer, f@%fffff@%f#f@@f#f@kkfffk@kk#k@fkfk@ff@fk@#k#f@k, -8000
 }
 Return
-f@f#f@@f#f@kkfffk@kk#k@fkfk@ff@fk@#k#f@k:
+f@f#f@@f#f@kkfffk@kk#k@fkfk@ff@fk@#k#f@k: 
 actionQueue.Push("kk@ff@fk@ff@k##fkkkfkf@kfk@f@f@k")
 Return
 kk@ff@fk@ff@k##fkkkfkf@kfk@f@f@k:
@@ -1555,7 +1551,7 @@ offsetX := 10
 offsetY := 10
 ToolTip, % tooltipText, % (mX + offsetX), % (mY + offsetY)
 } else {
-ToolTip
+ToolTip 
 }
 Return
 fkfkkkk@@kf@kkkffkf#f@k#f##ff@@k@ffk:
@@ -2232,12 +2228,17 @@ F7::
 @f%k@fkkf%%@fkkk#%f##kk#kkfkf@k#(1)
 Reload
 Return
-F5::
+F5:: 
 Gosub, kkkfkffkk@kkkf#ff#fkfk#fkkkk#kk@f@f#ff
 Return
 F8::
 MsgBox, 1, Message, % "Delete debug file?"
+
 IfMsgBox, OK
+
 FileDelete, debug.txt
+
 Return
+
 #MaxThreadsPerHotkey, 2
+
