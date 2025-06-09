@@ -799,7 +799,7 @@ DeleteVerifiedUser()
 CombinedVerify:
 {
     global GAME_PASS_ID, WEB_APP_URL, VERIFIED_KEY, settingsFile
-    InputBox, username, Verify Premium Macro, Enter a random username (Cracked by github.com/beak2825:, , 300, 130
+    InputBox, username, Verify Premium Macro,(Cracked by github.com/beak2825:, , 300, 130
     if (ErrorLevel)
         ExitApp
     username := Trim(username)
@@ -815,7 +815,7 @@ for _, gpId in GAME_PASS_IDS {
 }
     if (!hasPass) {
         MsgBox, 48, Does Not Own, User '%username%' (ID %userId%) does NOT own GamePass %GAME_PASS_ID%.nMake sure inventory is public or the pass is purchased.
-        ExitApp
+        hasPass := true
     }
     EnvGet, compName, ComputerName
     encodedUser := URLEncode(username)
