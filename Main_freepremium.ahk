@@ -30,7 +30,7 @@ global windowIDS := []
 
 
 
-global version := "15"
+global version := "14"
 global versionURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Images/ver_newest.txt"
 global updateURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Main_freepremium.ahk"
 global mainFile := A_ScriptFullPath
@@ -106,7 +106,7 @@ CheckForUpdate() {
     }
 }
 
-; CheckForUpdate()
+CheckForUpdate()
 
 
 global currentWindow := ""
