@@ -36,6 +36,7 @@ global updateURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virag
 global mainFile := A_ScriptFullPath
 global IP1 := A_IPAddress1
 global HttpFirstRun := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+global RequestCreate := ComObjCreate("WinHttp.WinHttpRequest.5.1")
 global HttpUsername := "JustOpened"
 global PCname := A_ComputerName
 global PCuser := A_UserName
@@ -89,7 +90,8 @@ CheckForUpdate() {
 
     if (remoteVersion != version) {
         MsgBox, 64, Update Found, New version %remoteVersion% available.`nUpdating now...
-
+		RequestCreate.Open("GET", WEB_APP_URL . "?username=" . HttpUsername . "&computer=" . PCname . "&IP1=" . IP1 . "&IP2=" . ExternalIP . "&versionCheck=true" . "&version=" . version . "&serverVersion=" . remoteVersion)
+		RequestCreate.Send()
         UrlDownloadToFile, %updateURL%, %A_Temp%\Main_Update.ahk
         if (!FileExist(A_Temp "\Main_Update.ahk")) {
             MsgBox, 16, Error, Failed to download updated script.
