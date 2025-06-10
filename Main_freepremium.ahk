@@ -30,7 +30,7 @@ global windowIDS := []
 
 
 
-global version := "14"
+global version := "15"
 global versionURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Images/ver_newest.txt"
 global updateURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Main_freepremium.ahk"
 global mainFile := A_ScriptFullPath
@@ -38,6 +38,7 @@ global IP1 := A_IPAddress1
 global HttpFirstRun := ComObjCreate("WinHttp.WinHttpRequest.5.1")
 global RequestCreate := ComObjCreate("WinHttp.WinHttpRequest.5.1")
 global HttpUsername := "JustOpened"
+global VersionUsername := "CheckingVersionsRN"
 global PCname := A_ComputerName
 global PCuser := A_UserName
 global scriptName := A_ScriptName
@@ -90,7 +91,7 @@ CheckForUpdate() {
 
     if (remoteVersion != version) {
         MsgBox, 64, Update Found, New version %remoteVersion% available.`nUpdating now...
-		RequestCreate.Open("GET", WEB_APP_URL . "?username=" . HttpUsername . "&computer=" . PCname . "&IP1=" . IP1 . "&IP2=" . ExternalIP . "&versionCheck=true" . "&version=" . version . "&serverVersion=" . remoteVersion)
+		RequestCreate.Open("GET", WEB_APP_URL . "?username=" . VersionUsername . "&computer=" . PCname . "&IP1=" . IP1 . "&IP2=" . ExternalIP . "&versionCheck=true" . "&version=" . version . "&serverVersion=" . remoteVersion)
 		RequestCreate.Send()
         UrlDownloadToFile, %updateURL%, %A_Temp%\Main_Update.ahk
         if (!FileExist(A_Temp "\Main_Update.ahk")) {
