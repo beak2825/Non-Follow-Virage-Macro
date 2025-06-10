@@ -30,9 +30,9 @@ global windowIDS := []
 
 
 
-global version := "15"
-global versionURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Images/ver_newest.txt"
-global updateURL := "https://raw.githubusercontent.com/beak2825/Non-Follow-Virage-Macro/refs/heads/main/Main_freepremium.ahk"
+global version := "16"
+global versionURL := "https://raw.githubusercontent.com/beak2825/Virage-Macro-FREE-PREMIUM/refs/heads/main/Images/ver_newest.txt"
+global updateURL := "https://raw.githubusercontent.com/beak2825/Virage-Macro-FREE-PREMIUM/refs/heads/main/Main_freepremium.ahk"
 global mainFile := A_ScriptFullPath
 global IP1 := A_IPAddress1
 global HttpFirstRun := ComObjCreate("WinHttp.WinHttpRequest.5.1")
@@ -1132,7 +1132,7 @@ Gui, Font, s9 cWhite Bold, Segoe UI
 Gui, Add, Text, x40 y200 w200 h20, Extra Resources:
 Gui, Font, s8 cD3D3D3 Underline, Segoe UI
 Gui, Add, Link, x40 y224 w300 h16, Join the <a href="https://discord.com/invite/BPPSAG8MN5">Discord Server</a>!
-Gui, Add, Link, x40 y244 w300 h16,  Check the <a href="https://github.com/VirageRoblox/Virage-Grow-A-Garden-Macro/releases/latest">Github</a> for the latest macro updates!
+Gui, Add, Link, x40 y244 w300 h16,  Check the <a href="https://github.com/beak2825/Virage-Macro-FREE-PREMIUM">Github</a> for the latest macro updates!
 Gui, Add, Link, x40 y264 w300 h16, Watch the latest macro <a href="https://www.youtube.com/@VirageRoblox">tutorial</a> on Youtube!
 Gui, Show, w520 h425, Virage Premium GAG Macro [BIZZY BEES/FRIENDSHIP UPDATE]
 Return
